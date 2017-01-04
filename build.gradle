@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'de.mobilej.unmock'
+apply plugin: 'net.ltgt.errorprone'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
@@ -12,7 +14,6 @@ android {
         versionName rootProject.ext.releaseVersionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         debug {
@@ -21,11 +22,79 @@ android {
     }
 }
 
+unMock {
+    downloadFrom 'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/6.0.0_r1-robolectric-0/android-all-6.0.0_r1-robolectric-0.jar'
+    downloadTo "${System.getenv('HOME')}/.gradle/caches/"
+
+    keep "android.os.Looper"
+    keep "android.content.ContentValues"
+    keepStartingWith "android.util."
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    testCompile 'junit:junit:4.12'
+    def modelBaseDependencies = rootProject.ext.modelBaseDependencies
+    def aptDependencies = rootProject.ext.aptDependencies
+    def testDependencies = rootProject.ext.testDependencies
+
+    compile modelBaseDependencies.javaxAnnotation
+
+    compile modelBaseDependencies.rxJava2
+    compile(modelBaseDependencies.rxAndroid2) {
+        exclude module: 'rxjava'
+    }
+    compile modelBaseDependencies.rxJava2Interop
+
+    // this should be removed after belows update
+    compile modelBaseDependencies.rxJava
+    compile(modelBaseDependencies.rxAndroid) {
+        exclude module: 'rxjava'
+    }
+    compile(modelBaseDependencies.rxBindingAppCompatV7) {
+        exclude module: 'rxjava'
+        exclude module: 'rxandroid'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-annotations'
+    }
+    compile modelBaseDependencies.eventBus
+    compile modelBaseDependencies.dagger
+    compile(modelBaseDependencies.butterKnife) {
+        exclude module: 'support-annotations'
+    }
+
+    compile modelBaseDependencies.gson
+    compile modelBaseDependencies.okHttp
+    compile(modelBaseDependencies.retrofit) {
+        exclude module: 'okhttp'
+    }
+    compile(modelBaseDependencies.retrofitGsonConverter) {
+        exclude module: 'gson'
+    }
+    compile(modelBaseDependencies.retrofitRxJava2Adapter) {
+        exclude module: 'rxjava'
+    }
+
+    compile modelBaseDependencies.threetenabp
+    compile modelBaseDependencies.autoBundle
+
+    compile modelBaseDependencies.timber
+    compile modelBaseDependencies.okHttpLogging
+    compile(modelBaseDependencies.ok2Curl) {
+        exclude module: 'okhttp'
+    }
+    compile(modelBaseDependencies.stethoOkhttp) {
+        exclude module: 'okhttp'
+        exclude module: 'jsr305'
+    }
+
+    provided aptDependencies.autoValue
+    annotationProcessor aptDependencies.daggerApt
+    annotationProcessor aptDependencies.autoParcelApt
+    retrolambdaConfig aptDependencies.retrolambda
+    errorprone aptDependencies.errorprone
+
+    testCompile testDependencies.hamcrestLibrary
+    testCompile(testDependencies.junit) {
+        exclude module: 'hamcrest-core'
+    }
+    testCompile testDependencies.mockito
 }
