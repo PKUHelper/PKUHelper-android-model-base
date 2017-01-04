@@ -36,6 +36,7 @@ dependencies {
     def aptDependencies = rootProject.ext.aptDependencies
     def testDependencies = rootProject.ext.testDependencies
 
+    compile modelBaseDependencies.androidSupportAppCompatV7
     compile modelBaseDependencies.javaxAnnotation
 
     compile modelBaseDependencies.rxJava2
