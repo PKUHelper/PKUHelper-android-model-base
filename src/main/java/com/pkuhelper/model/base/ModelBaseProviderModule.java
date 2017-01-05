@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Luolc
+ * Copyright (c) 2016-2017 Piasy, Luolc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,8 @@ package com.pkuhelper.model.base;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.pkuhelper.model.base.config.GsonConfig;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.moczul.ok2curl.CurlInterceptor;
 import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
 
 import org.threeten.bp.ZonedDateTime;
@@ -36,14 +37,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import timber.log.Timber;
 
 /**
  * @author LuoLiangchen
  * @since 2017/1/4
  */
-
 @Module
-public class ProviderModule {
+public class ModelBaseProviderModule {
 
   @Singleton
   @Provides
@@ -62,5 +65,19 @@ public class ProviderModule {
         .setDateFormat(config.dateFormatString())
         .setPrettyPrinting()
         .create();
+  }
+
+  @Singleton
+  @Provides
+  OkHttpClient provideHttpClient(final HttpClientConfig config) {
+    final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    if (config.enableLog()) {
+      builder
+          .addNetworkInterceptor(new StethoInterceptor())
+          .addInterceptor(new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").d(message))
+              .setLevel(HttpLoggingInterceptor.Level.BODY))
+          .addInterceptor(new CurlInterceptor(message -> Timber.tag("Ok2Curl").d(message)));
+    }
+    return builder.build();
   }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.pkuhelper.model.base.config;
+package com.pkuhelper.model.base;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.FieldNamingPolicy;
