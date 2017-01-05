@@ -8,7 +8,7 @@ This is a base part of model for PKU Helper for Android. Highly inspired by Pias
 - [ ] Retrofit
 - [ ] EventBus
 - [ ] DAO(unspecific)
-- [ ] JSR310
+- [x] JSR310
 
 ## License
 
