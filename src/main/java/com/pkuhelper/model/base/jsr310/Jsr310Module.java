@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Luolc
+ * Copyright (c) 2016-2017 Piasy, Luolc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,9 @@
  * SOFTWARE.
  */
 
-package com.pkuhelper.model.base;
+package com.pkuhelper.model.base.jsr310;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import com.pkuhelper.model.base.config.GsonConfig;
-import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
-
-import org.threeten.bp.ZonedDateTime;
+import android.support.annotation.NonNull;
 
 import javax.inject.Singleton;
 
@@ -38,29 +32,17 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * @author LuoLiangchen
- * @since 2017/1/4
+ * Created by Piasy{github.com/Piasy} on 15/8/9.
+ *
+ * DI module for providing 310.
  */
-
 @Module
-public class ProviderModule {
+public class Jsr310Module {
 
   @Singleton
   @Provides
-  Gson provideGson(final GsonConfig config) {
-    final GsonBuilder builder = new GsonBuilder();
-    if (config.autoGsonTypeAdapterFactory() != null) {
-      builder.registerTypeAdapterFactory(config.autoGsonTypeAdapterFactory());
-    }
-    if (config.fieldNamingPolicy() != null) {
-      builder.setFieldNamingPolicy(config.fieldNamingPolicy());
-    }
-    return builder
-        .registerTypeAdapter(
-            ZonedDateTime.class,
-            new ZonedDateTimeJsonConverter(config.dateTimeFormatter()))
-        .setDateFormat(config.dateFormatString())
-        .setPrettyPrinting()
-        .create();
+  ThreeTenAbpDelegate provideThreeTenAbpDelegate(
+      @NonNull final ThreeTenAbpDelegateImpl delegate) {
+    return delegate;
   }
 }

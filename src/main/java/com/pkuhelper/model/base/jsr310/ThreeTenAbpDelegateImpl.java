@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Luolc
+ * Copyright (c) 2016-2017 Piasy, Luolc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,45 +22,37 @@
  * SOFTWARE.
  */
 
-package com.pkuhelper.model.base;
+package com.pkuhelper.model.base.jsr310;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import com.pkuhelper.model.base.config.GsonConfig;
-import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
-
-import org.threeten.bp.ZonedDateTime;
-
+import android.app.Application;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.Provides;
-
 /**
- * @author LuoLiangchen
- * @since 2017/1/4
+ * Created by Piasy{github.com/Piasy} on 15/8/16.
+ *
+ * Implementation of {@link ThreeTenAbpDelegate}.
  */
+@Singleton
+public class ThreeTenAbpDelegateImpl implements ThreeTenAbpDelegate {
 
-@Module
-public class ProviderModule {
+  private final Application mApplication;
 
-  @Singleton
-  @Provides
-  Gson provideGson(final GsonConfig config) {
-    final GsonBuilder builder = new GsonBuilder();
-    if (config.autoGsonTypeAdapterFactory() != null) {
-      builder.registerTypeAdapterFactory(config.autoGsonTypeAdapterFactory());
-    }
-    if (config.fieldNamingPolicy() != null) {
-      builder.setFieldNamingPolicy(config.fieldNamingPolicy());
-    }
-    return builder
-        .registerTypeAdapter(
-            ZonedDateTime.class,
-            new ZonedDateTimeJsonConverter(config.dateTimeFormatter()))
-        .setDateFormat(config.dateFormatString())
-        .setPrettyPrinting()
-        .create();
+  /**
+   * Create instance with the given {@link Application} object. Used to initialize the
+   * ThreeTenABP library.
+   *
+   * @param application the given {@link Application} object. Used to initialize the ThreeTenABP
+   * library.
+   */
+  @Inject
+  ThreeTenAbpDelegateImpl(final Application application) {
+    this.mApplication = application;
+  }
+
+  @Override
+  public void init() {
+    AndroidThreeTen.init(mApplication);
   }
 }
