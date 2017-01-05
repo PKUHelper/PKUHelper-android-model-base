@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moczul.ok2curl.CurlInterceptor;
 import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
 
@@ -37,8 +38,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 /**
@@ -79,5 +83,16 @@ public class ModelBaseProviderModule {
           .addInterceptor(new CurlInterceptor(message -> Timber.tag("Ok2Curl").d(message)));
     }
     return builder.build();
+  }
+
+  @Singleton
+  @Provides
+  Retrofit provideRetrofit(final RetrofitConfig config, final OkHttpClient okHttpClient,
+                           final Gson gson) {
+    return new Retrofit.Builder().baseUrl(config.baseUrl())
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+        .build();
   }
 }

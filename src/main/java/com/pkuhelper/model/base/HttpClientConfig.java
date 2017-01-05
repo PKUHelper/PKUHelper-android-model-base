@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Luolc
+ * Copyright (c) 2016-2017 Piasy, Luolc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,26 @@
 
 package com.pkuhelper.model.base;
 
+import com.google.auto.value.AutoValue;
+
 /**
  * @author LuoLiangchen
  * @since 2017/1/5
  */
-public class HttpClientConfig {
+@AutoValue
+public abstract class HttpClientConfig {
+
+  public static Builder builder() {
+    return new AutoValue_HttpClientConfig.Builder();
+  }
+
+  public abstract boolean enableLog();
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+
+    public abstract Builder enableLog(final boolean enableLog);
+
+    public abstract HttpClientConfig build();
+  }
 }
