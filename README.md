@@ -5,7 +5,9 @@ This is a base part of model for PKU Helper for Android. Highly inspired by Pias
 ## TODO
 - [x] Gson
 - [ ] HttpClient
-- [ ] Retrofit
+    - [x] basic
+    - [ ] UA Interceptor
+- [x] Retrofit
 - [ ] EventBus
 - [ ] DAO(unspecific)
 - [x] JSR310
