@@ -22,49 +22,32 @@
  * SOFTWARE.
  */
 
-package com.pkuhelper.model.base;
+package com.pkuhelper.model.base.httpclient;
 
 import com.google.auto.value.AutoValue;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.TypeAdapterFactory;
-
-import android.support.annotation.Nullable;
-
-import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * @author LuoLiangchen
- * @since 2017/1/4
+ * @since 2017/1/5
  */
 @AutoValue
-public abstract class GsonConfig {
+public abstract class HttpClientConfig {
 
   public static Builder builder() {
-    return new AutoValue_GsonConfig.Builder();
+    return new AutoValue_HttpClientConfig.Builder();
   }
 
-  public abstract DateTimeFormatter dateTimeFormatter();
+  public abstract boolean enableLog();
 
-  public abstract String dateFormatString();
-
-  @Nullable
-  public abstract TypeAdapterFactory autoGsonTypeAdapterFactory();
-
-  @Nullable
-  public abstract FieldNamingPolicy fieldNamingPolicy();
+  public abstract String clientName();
 
   @AutoValue.Builder
   public abstract static class Builder {
 
-    public abstract Builder dateTimeFormatter(final DateTimeFormatter dateTimeFormatter);
+    public abstract Builder enableLog(final boolean enableLog);
 
-    public abstract Builder dateFormatString(final String dateFormatString);
+    public abstract Builder clientName(final String clientName);
 
-    public abstract Builder autoGsonTypeAdapterFactory(
-        @Nullable final TypeAdapterFactory typeAdapterFactory);
-
-    public abstract Builder fieldNamingPolicy(@Nullable FieldNamingPolicy fieldNamingPolicy);
-
-    public abstract GsonConfig build();
+    public abstract HttpClientConfig build();
   }
 }

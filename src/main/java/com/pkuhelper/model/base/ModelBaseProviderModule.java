@@ -30,7 +30,10 @@ import com.google.gson.GsonBuilder;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moczul.ok2curl.CurlInterceptor;
+import com.pkuhelper.model.base.gson.GsonConfig;
+import com.pkuhelper.model.base.httpclient.HttpClientConfig;
 import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
+import com.pkuhelper.model.base.retrofit.RetrofitConfig;
 
 import org.threeten.bp.ZonedDateTime;
 

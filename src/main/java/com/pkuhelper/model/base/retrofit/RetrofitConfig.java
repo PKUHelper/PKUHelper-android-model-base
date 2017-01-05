@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.pkuhelper.model.base;
+package com.pkuhelper.model.base.retrofit;
 
 import com.google.auto.value.AutoValue;
 
@@ -31,19 +31,19 @@ import com.google.auto.value.AutoValue;
  * @since 2017/1/5
  */
 @AutoValue
-public abstract class HttpClientConfig {
+public abstract class RetrofitConfig {
 
   public static Builder builder() {
-    return new AutoValue_HttpClientConfig.Builder();
+    return new AutoValue_RetrofitConfig.Builder();
   }
 
-  public abstract boolean enableLog();
+  public abstract String baseUrl();
 
   @AutoValue.Builder
   public abstract static class Builder {
 
-    public abstract Builder enableLog(final boolean enableLog);
+    public abstract Builder baseUrl(final String baseUrl);
 
-    public abstract HttpClientConfig build();
+    public abstract RetrofitConfig build();
   }
 }
