@@ -26,6 +26,8 @@ package com.pkuhelper.model.base.httpclient;
 
 import com.google.auto.value.AutoValue;
 
+import android.support.annotation.Nullable;
+
 /**
  * @author LuoLiangchen
  * @since 2017/1/5
@@ -39,6 +41,7 @@ public abstract class HttpClientConfig {
 
   public abstract boolean enableLog();
 
+  @Nullable
   public abstract String clientName();
 
   @AutoValue.Builder
@@ -46,7 +49,7 @@ public abstract class HttpClientConfig {
 
     public abstract Builder enableLog(final boolean enableLog);
 
-    public abstract Builder clientName(final String clientName);
+    public abstract Builder clientName(@Nullable final String clientName);
 
     public abstract HttpClientConfig build();
   }

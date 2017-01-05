@@ -32,6 +32,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moczul.ok2curl.CurlInterceptor;
 import com.pkuhelper.model.base.gson.GsonConfig;
 import com.pkuhelper.model.base.httpclient.HttpClientConfig;
+import com.pkuhelper.model.base.httpclient.UserAgentInterceptor;
 import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
 import com.pkuhelper.model.base.retrofit.RetrofitConfig;
 
@@ -84,6 +85,9 @@ public class ModelBaseProviderModule {
           .addInterceptor(new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").d(message))
               .setLevel(HttpLoggingInterceptor.Level.BODY))
           .addInterceptor(new CurlInterceptor(message -> Timber.tag("Ok2Curl").d(message)));
+    }
+    if (config.clientName() != null) {
+      builder.addInterceptor(new UserAgentInterceptor(config.clientName()));
     }
     return builder.build();
   }

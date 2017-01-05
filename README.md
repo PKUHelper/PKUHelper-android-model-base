@@ -6,7 +6,8 @@ This is a base part of model for PKU Helper for Android. Highly inspired by Pias
 - [x] Gson
 - [ ] HttpClient
     - [x] basic
-    - [ ] UA Interceptor
+    - [x] UA Interceptor
+    - [x] *UA Interceptor Test*
 - [x] Retrofit
 - [ ] EventBus
 - [ ] DAO(unspecific)
