@@ -4,7 +4,7 @@ This is a base part of model for PKU Helper for Android. Highly inspired by Pias
 
 ## TODO
 - [x] Gson
-- [ ] HttpClient
+- [x] HttpClient
     - [x] basic
     - [x] UA Interceptor
     - [x] *UA Interceptor Test*
