@@ -32,6 +32,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moczul.ok2curl.CurlInterceptor;
 import com.pkuhelper.model.base.gson.GsonConfig;
 import com.pkuhelper.model.base.httpclient.HttpClientConfig;
+import com.pkuhelper.model.base.httpclient.MemoryCookieJar;
 import com.pkuhelper.model.base.httpclient.UserAgentInterceptor;
 import com.pkuhelper.model.base.jsr310.ZonedDateTimeJsonConverter;
 import com.pkuhelper.model.base.retrofit.RetrofitConfig;
@@ -89,6 +90,9 @@ public class ModelBaseProviderModule {
     if (config.clientName() != null) {
       builder.addInterceptor(new UserAgentInterceptor(config.clientName()));
     }
+    if (config.enableCookie()) {
+      builder.cookieJar(new MemoryCookieJar());
+    }
     return builder.build();
   }
 
@@ -96,7 +100,8 @@ public class ModelBaseProviderModule {
   @Provides
   Retrofit provideRetrofit(final RetrofitConfig config, final OkHttpClient okHttpClient,
                            final Gson gson) {
-    return new Retrofit.Builder().baseUrl(config.baseUrl())
+    return new Retrofit.Builder()
+        .baseUrl(config.baseUrl())
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))

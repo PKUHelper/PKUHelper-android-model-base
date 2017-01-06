@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Piasy, Luolc
+ * Copyright (c) 2016-2017 Luolc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,37 +24,37 @@
 
 package com.pkuhelper.model.base.httpclient;
 
-import com.google.auto.value.AutoValue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import android.support.annotation.Nullable;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 
 /**
+ * A {@link CookieJar} implementation which enables cookies in memory level.
+ *
+ * <p>Using a Map to store cookies which are classified by the host of {@code okhttp3.HttpUrl}</p>
+ *
  * @author LuoLiangchen
- * @since 2017/1/5
+ * @since 2017/1/6
  */
-@AutoValue
-public abstract class HttpClientConfig {
+public class MemoryCookieJar implements CookieJar {
 
-  public static Builder builder() {
-    return new AutoValue_HttpClientConfig.Builder();
+  private static final List<Cookie> EMPTY_COOKIES = new ArrayList<>();
+
+  private final Map<String, List<Cookie>> mCookieStore = new ConcurrentHashMap<>();
+
+  @Override
+  public void saveFromResponse(final HttpUrl url, final List<Cookie> cookies) {
+    mCookieStore.put(url.host(), cookies);
   }
 
-  public abstract boolean enableLog();
-
-  public abstract boolean enableCookie();
-
-  @Nullable
-  public abstract String clientName();
-
-  @AutoValue.Builder
-  public abstract static class Builder {
-
-    public abstract Builder enableLog(final boolean enableLog);
-
-    public abstract Builder enableCookie(final boolean enableCookie);
-
-    public abstract Builder clientName(@Nullable final String clientName);
-
-    public abstract HttpClientConfig build();
+  @Override
+  public List<Cookie> loadForRequest(final HttpUrl url) {
+    final List<Cookie> cookies = mCookieStore.get(url.host());
+    return cookies == null ? EMPTY_COOKIES : cookies;
   }
 }

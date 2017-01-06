@@ -8,7 +8,7 @@ This is a base part of model for PKU Helper for Android. Highly inspired by Pias
     - [x] basic
     - [x] UA Interceptor
     - [x] *UA Interceptor Test*
-    - [ ] cookie jar
+    - [x] cookie jar
 - [x] Retrofit
 - [ ] EventBus
 - [ ] DAO(unspecific)
