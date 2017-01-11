@@ -73,7 +73,7 @@ public class UserAgentInterceptor implements Interceptor {
       synchronized (UserAgentInterceptor.class) {
         if (sOriginalUserAgentContent == null) {
           final String httpAgent = getOriginalUserAgent();
-          final Pattern pattern = Pattern.compile(".*(\\(.*\\)).*");
+          final Pattern pattern = Pattern.compile("^[^\\(\\)]*?(\\(.*?\\)).*$");
           final Matcher matcher = pattern.matcher(httpAgent);
           sOriginalUserAgentContent = matcher.matches() ? " " + matcher.group(1) : "";
         }

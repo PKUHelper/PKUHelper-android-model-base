@@ -29,11 +29,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -46,30 +49,38 @@ public class UserAgentInterceptorTest {
   private UserAgentInterceptor mUserAgentInterceptor;
 
   @Before
-  public void setup() {
+  public void setUp() {
     mUserAgentInterceptor = spy(new UserAgentInterceptor("pkuhelper"));
     when(mUserAgentInterceptor.generateUserAgentPrefix()).thenReturn("pkuhelper/3.0.0");
     when(mUserAgentInterceptor.getOriginalUserAgent()).thenReturn(
-        "Mozilla/5.0 (Linux; U; Android 6.0.1; Nexus 6P Build/MTC20L) something else");
+        "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) "
+        + "AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
   }
 
   @Test
-  public void generateUserAgent() {
-    assertEquals("pkuhelper/3.0.0 (Linux; U; Android 6.0.1; Nexus 6P Build/MTC20L)",
+  public void testGenerateUserAgent() {
+    assertEquals("pkuhelper/3.0.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91)",
         mUserAgentInterceptor.generateUserAgent());
   }
 
   @Test
-  public void interceptWithNewUserAgent() throws IOException {
+  public void testInterceptWithNewUserAgent() throws IOException, InterruptedException {
+    MockWebServer server = new MockWebServer();
+    server.enqueue(new MockResponse());
+    server.start();
+    HttpUrl baseUrl = server.url("test");
+
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .addInterceptor(mUserAgentInterceptor)
         .build();
     Request originRequest = new Request.Builder()
-        .url("https://api.github.com")
+        .url(baseUrl.url())
         .header("User-Agent", "something else")
         .build();
-    Response response = okHttpClient.newCall(originRequest).execute();
-    Request request = response.request();
-    assertEquals(mUserAgentInterceptor.generateUserAgent(), request.header("User-Agent"));
+    okHttpClient.newCall(originRequest).execute();
+    RecordedRequest request = server.takeRequest();
+    assertEquals(mUserAgentInterceptor.generateUserAgent(), request.getHeader("User-Agent"));
+
+    server.shutdown();
   }
 }

@@ -109,4 +109,5 @@ dependencies {
         exclude module: 'hamcrest-core'
     }
     testCompile testDependencies.mockito
+    testCompile testDependencies.mockWebServer
 }
