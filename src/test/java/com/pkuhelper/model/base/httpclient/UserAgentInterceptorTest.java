@@ -58,13 +58,13 @@ public class UserAgentInterceptorTest {
   }
 
   @Test
-  public void testGenerateUserAgent() {
+  public void generateUserAgentContent() {
     assertEquals("pkuhelper/3.0.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91)",
         mUserAgentInterceptor.generateUserAgent());
   }
 
   @Test
-  public void testInterceptWithNewUserAgent() throws IOException, InterruptedException {
+  public void interceptWithNewUserAgent() throws IOException, InterruptedException {
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse());
     server.start();
