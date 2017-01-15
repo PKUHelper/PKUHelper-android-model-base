@@ -101,6 +101,7 @@ dependencies {
     provided aptDependencies.autoValue
     annotationProcessor aptDependencies.daggerApt
     annotationProcessor aptDependencies.autoParcelApt
+    annotationProcessor aptDependencies.autoWithApt
     retrolambdaConfig aptDependencies.retrolambda
     errorprone aptDependencies.errorprone
 
